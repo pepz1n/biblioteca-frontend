@@ -36,7 +36,7 @@
     </v-btn>
     <v-btn
       outlined
-      to="/usuarios"
+      to="/categorias"
       color="red"
     >
       cancelar

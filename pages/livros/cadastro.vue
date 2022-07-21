@@ -57,15 +57,6 @@
           ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col>
-            <v-switch
-              v-model="categoria.emprestado"
-              :label="`Emprestado? ${categoria.emprestado}`"
-            >
-            </v-switch>
-          </v-col>
-        </v-row>
       </v-container>
       </v-form>
     <v-btn
@@ -123,7 +114,7 @@ export default {
     },
    
    async getAutores () {
-      this.autores = await this.$axios.$get('http://localhost:3333/autores');
+      this.autores = await this.$axios.$get('http://localhost:3333/autor');
     },
     async getCategorias () {
       this.categorias = await this.$axios.$get('http://localhost:3333/categorias');

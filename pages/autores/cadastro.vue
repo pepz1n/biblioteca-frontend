@@ -46,7 +46,7 @@
     </v-btn>
     <v-btn
       outlined
-      to="/usuarios"
+      to="/autores"
       color="red"
     >
       cancelar

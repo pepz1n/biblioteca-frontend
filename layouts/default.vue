@@ -108,17 +108,17 @@ export default {
           to: '/livros'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-folder',
           title: 'Categorias',
           to: '/categorias'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-account',
           title: 'Autores',
           to: '/autores'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-account-school',
           title: 'Usuarios',
           to: '/usuarios'
         }
