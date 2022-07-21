@@ -118,7 +118,7 @@ export default {
           to: '/autores'
         },
         {
-          icon: 'mdi-account-school',
+          icon: 'mdi-cat',
           title: 'Usuarios',
           to: '/usuarios'
         }

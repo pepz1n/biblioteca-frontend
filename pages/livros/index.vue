@@ -19,7 +19,10 @@
           to="/livros/cadastro"
           color="green"
         >
-          cadastro
+         <v-icon>
+          mdi-plus
+         </v-icon> 
+         cadastro
         </v-btn>
       </v-col>
     </v-row>
@@ -33,7 +36,23 @@
         :items="categorias"
         :items-per-page="10"
         class="elevation-1"
-      ></v-data-table>
+      >
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
       </v-col>
     </v-row>
     </v-container>
@@ -59,12 +78,12 @@ export default {
           sortable: true,
           value: 'titulo',
         },
-        {
-          text: 'Sinopse',
-          align: 'center',
-          sortable: true,
-          value: 'sinopse',
-        },
+        // {
+        //   text: 'Sinopse',
+        //   align: 'center',
+        //   sortable: true,
+        //   value: 'sinopse',
+        // },
         {
           text: 'Categoria',
           align: 'center',
@@ -76,7 +95,8 @@ export default {
           align: 'center',
           sortable: true,
           value: 'autor.nome',
-        }
+        },
+        { text: "", value: "actions" }
       ],
       categorias: []
     }
