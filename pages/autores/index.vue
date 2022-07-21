@@ -47,7 +47,7 @@
           </v-icon>
           <v-icon
             small
-            @click="deleteItem(item)"
+            @click="deletar(item)"
           >
             mdi-delete
           </v-icon>
@@ -93,6 +93,18 @@ export default {
   methods: {
     async getCategorias () {
       this.categorias = await this.$axios.$get(`http://localhost:3333/autor`)
+    },
+    
+    async deletar (autor) {
+      try {
+        if (confirm(`Deseja deletar o autor id ${autor.id} - ${autor.nome}?`)) {
+          let response = await this.$axios.$post('http://localhost:3333/autor/deletar', { id: autor.id });
+          this.$toast(response.message)
+          this.getCategorias();
+        } 
+      } catch (error) {
+        this.$toast.error(error.message)
+      }
     }
   }
 

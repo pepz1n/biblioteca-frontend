@@ -2,7 +2,7 @@
   <v-container>
     <h1 style="text-align: center">Cadastro de Categorias</h1>
     <hr>
-    <v-form>
+    <v-form v-model="valid">
       <v-container>
         <v-row>
           <v-col>
@@ -21,6 +21,8 @@
               v-model="categoria.nome"
               placeholder="Nome"
               label="Nome"
+              :rules="rule"
+              required
               outlined
             />
           </v-col>
@@ -50,20 +52,36 @@ export default {
 
   data () {
     return {
+      valid: false,
       categoria: {
         id: null,
         nome: null
-      }
+      },
+      rule: [
+        v => !!v || 'Esse campo é obrigatório'
+      ]
     }
   },
 
   methods: {
     async cadastrar () {
-      let categoria = {
-        nome: this.categoria.nome
-      };
-      let response = await this.$axios.$post('http://localhost:3333/categorias', categoria);
-      console.log(response);
+      try {
+         if (!this.valid) {
+          return this.$toast.warning('O formulário de cadastro não é válido!')
+        }
+        let categoria = {
+          nome: this.categoria.nome
+        };
+        let response = await this.$axios.$post('http://localhost:3333/categorias', categoria);
+        console.log(response);
+        this.$router.push('/categorias')
+        this.$toast.success(`${response.nome} cadastrado com sucesso`)
+        
+      } catch (error) {
+        this.$toast.error('Ocorreu um erro ao realizar o cadastro!');
+        
+      }
+
     }
   }
 }

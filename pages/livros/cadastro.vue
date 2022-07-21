@@ -2,7 +2,7 @@
   <v-container>
     <h1 style="text-align: center">Cadastro de Livros</h1>
     <hr>
-    <v-form>
+    <v-form v-model="valid">
       <v-container>
         <v-row>
           <v-col>
@@ -21,6 +21,8 @@
               v-model="categoria.titulo"
               placeholder="Titulo"
               label="Titulo"
+              :rules="rule"
+              required
               outlined
             />
           </v-col>
@@ -31,6 +33,8 @@
               v-model="categoria.sinopse"
               placeholder="Sinopse"
               label="Sinopse"
+              :rules="rule"
+              required
               outlined
             />
           </v-col>
@@ -42,6 +46,8 @@
             :items="categorias"
             outlined
             label="ID Categoria"
+            :rules="rule"
+            required
             item-text="nome"
             item-value="id"
           ></v-autocomplete>
@@ -52,6 +58,8 @@
             :items="autores"
             outlined
             label="ID Autor"
+            :rules="rule"
+            required
             item-text="nome"
             item-value="id"
           ></v-autocomplete>
@@ -82,6 +90,7 @@ export default {
 
   data () {
     return {
+      valid: false,
       categoria: {
         id: null,
         titulo: null,
@@ -91,7 +100,10 @@ export default {
         idAutor: null,
       },
       autores: [],
-      categorias: []
+      categorias: [],
+      rule: [
+        v => !!v || 'Esse campo é obrigatório'
+      ]
     }
   },
     
@@ -102,15 +114,23 @@ export default {
 
   methods: {
     async cadastrar () {
-      let categoria = {
+      try {
+         let categoria = {
         titulo: this.categoria.titulo,
         sinopse: this.categoria.sinopse,
         emprestado: this.categoria.emprestado,
         idCategoria: this.categoria.idCategoria,
         idAutor: this.categoria.idAutor
-      };
-      let response = await this.$axios.$post('http://localhost:3333/livro', categoria);
-      console.log(response);
+        };
+        let response = await this.$axios.$post('http://localhost:3333/livro', categoria);
+        console.log(response);
+        this.$router.push('/livros')
+        this.$toast.success(`${response.titulo} cadastrado com sucesso`)
+        
+      } catch (error) {
+        this.$toast.error('Ocorreu um erro ao realizar o cadastro!');
+        
+      }
     },
    
    async getAutores () {
