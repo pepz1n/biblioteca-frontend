@@ -41,7 +41,7 @@
           <v-icon
             small
             class="mr-2"
-            @click="editItem(item)"
+            @click="editar(item)"
           >
             mdi-pencil
           </v-icon>
@@ -91,7 +91,7 @@ export default {
   },
 
   methods: {
-    async getCategorias () {
+    getCategorias: async function () {
       this.categorias = await this.$axios.$get(`http://localhost:3333/autor`)
     },
     
@@ -99,13 +99,22 @@ export default {
       try {
         if (confirm(`Deseja deletar o autor id ${autor.id} - ${autor.nome}?`)) {
           let response = await this.$axios.$post('http://localhost:3333/autor/deletar', { id: autor.id });
-          this.$toast(response.message)
+          this.$toast.success(response.message)
           this.getCategorias();
         } 
       } catch (error) {
         this.$toast.error(error.message)
       }
+    },
+    async editar (categoria) {
+      this.$router.push({
+        name: 'autores-cadastro',
+        params: { id: categoria.id }
+      });
     }
+  },
+  created(){
+    this.getCategorias()
   }
 
 }

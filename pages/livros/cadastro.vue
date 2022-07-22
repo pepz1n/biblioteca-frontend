@@ -69,7 +69,7 @@
       </v-form>
     <v-btn
       outlined
-      @click="cadastrar"
+      @click="persistir"
       color="green"
     >
       cadastrar
@@ -107,13 +107,16 @@ export default {
     }
   },
     
-    created () {
+  created () {
+    if (this.$route?.params?.id) {
+    this.getById(this.$route.params.id)
+    }
     this.getAutores();
     this.getCategorias();
   },
 
   methods: {
-    async cadastrar () {
+    async persistir () {
       try {
          let categoria = {
         titulo: this.categoria.titulo,
@@ -122,11 +125,16 @@ export default {
         idCategoria: this.categoria.idCategoria,
         idAutor: this.categoria.idAutor
         };
-        let response = await this.$axios.$post('http://localhost:3333/livro', categoria);
-        console.log(response);
+
+        if(!this.categoria.id){  
+          let response = await this.$axios.$post('http://localhost:3333/livro', categoria);
+          this.$router.push('/livros')
+          return this.$toast.success(`${response.titulo} cadastrado com sucesso`)
+        }
+
+        await this.$axios.$post(`http://localhost:3333/livro/${this.categoria.id}`, categoria )
         this.$router.push('/livros')
-        this.$toast.success(`${response.titulo} cadastrado com sucesso`)
-        
+        this.$toast.success('Cadastro atualizado com sucesso!');
       } catch (error) {
         this.$toast.error('Ocorreu um erro ao realizar o cadastro!');
         
@@ -138,6 +146,9 @@ export default {
     },
     async getCategorias () {
       this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
+    },
+    async getById (id) {
+      this.categoria = await this.$axios.$get(`http://localhost:3333/livro/${id}`);
     } 
   }
 }

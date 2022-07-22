@@ -65,7 +65,7 @@
     </v-form>
     <v-btn
       outlined
-      @click="cadastrar"
+      @click="persistir"
       color="green"
     >
       cadastrar
@@ -98,10 +98,15 @@ export default {
       ]
     }
   },
+  created () {
+    if (this.$route?.params?.id) {
+      this.getById(this.$route.params.id)
+    }
+  },
 
   methods: {
-    async cadastrar () {
-      try {
+    async persistir () {
+      try { 
         if (!this.valid) {
           return this.$toast.warning('O formulário de cadastro não é válido!')
         }
@@ -111,13 +116,21 @@ export default {
         email: this.categoria.email,
         telefone: this.categoria.telefone
         };
-        let response = await this.$axios.$post('http://localhost:3333/usuario', categoria);
-        console.log(response);
+        
+        if(!this.categoria.id){  
+          let response = await this.$axios.$post('http://localhost:3333/usuario', categoria);
+          this.$router.push('/usuarios')
+          return this.$toast.success(`${response.nome} cadastrado com sucesso`)
+        }
+        await this.$axios.$post(`http://localhost:3333/usuario/${this.categoria.id}`, categoria )
         this.$router.push('/usuarios')
-        this.$toast.success(`${response.nome} cadastrado com sucesso`)
+        this.$toast.success('Cadastro atualizado com sucesso!');
       } catch (error) {
         this.$toast.error("DON't FORGET AMEM")
       }
+    },
+    async getById (id) {
+      this.categoria = await this.$axios.$get(`http://localhost:3333/usuario/${id}`);
     }
   }
 }
