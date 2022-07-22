@@ -121,6 +121,11 @@ export default {
           icon: 'mdi-cat',
           title: 'Usuarios',
           to: '/usuarios'
+        },
+        {
+          icon: 'mdi-cannabis',
+          title: 'Consultar Livro',
+          to: '/listarLivros'
         }
       ],
       miniVariant: false,

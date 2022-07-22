@@ -104,6 +104,7 @@ export default {
 
   methods: {
      getCategorias: async function () {
+      console.log(await this.$axios.$get(`http://localhost:3333/livro`));
       this.categorias = await this.$axios.$get(`http://localhost:3333/livro`)
     },
     async deletar (autor) {
