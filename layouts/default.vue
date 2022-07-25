@@ -126,6 +126,11 @@ export default {
           icon: 'mdi-cannabis',
           title: 'Consultar Livro',
           to: '/listarLivros'
+        },
+        {
+          icon: 'mdi-calculator',
+          title: 'Carculedore do CRS',
+          to: '/carculadora'
         }
       ],
       miniVariant: false,
