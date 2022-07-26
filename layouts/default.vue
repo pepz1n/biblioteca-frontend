@@ -128,6 +128,11 @@ export default {
           to: '/listarLivros'
         },
         {
+          icon: 'mdi-cannabis',
+          title: 'Emprestimo',
+          to: '/emprestimo'
+        },
+        {
           icon: 'mdi-calculator',
           title: 'Carculedore do CRS',
           to: '/carculadora'

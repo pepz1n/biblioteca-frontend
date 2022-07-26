@@ -26,13 +26,13 @@
     >
       procurar
     </v-btn>
-    <template v-if="emprestado">
+    <template v-if="emprestado == true">
       <v-card
         class="mx-auto"
         max-width="344"
       >
         <v-card-text>
-          <div>ID: {{this.pesquisa[0].Emprestimo.id}}</div>
+          <div>ID: {{this.categoria.id}}</div>
           <p class="text-h4 text--primary">
             {{this.pesquisa[0].Emprestimo.titulo}}
           </p>
@@ -82,15 +82,18 @@
         </v-expand-transition>
       </v-card>
     </template>
-    <template v-if="!emprestado">
+    <template v-if="emprestado == false">
       <v-card
         class="mx-auto"
         max-width="344"
       >
         <v-card-text>
-          <div>ID: {{this.livros.id}}</div>
+          <div>ID: {{this.categoria.id}}</div>
           <p class="text-h4 text--primary">
-            {{this.livros.titulo}}
+            {{this.categoria.titulo}}
+          </p>
+          <p class="text-h4 text--primary">
+            {{this.titulo}}
           </p>
           <p>Status do Livro:</p>
           <div class="text--primary">
@@ -149,6 +152,7 @@ export default {
       nomeUsuario: null,
       reveal: false,
       emprestado: null,
+      titulo: null,
       pesquisa: [],
       headers: [
         {
@@ -192,14 +196,17 @@ export default {
         };
 
         let socorro = await this.$axios.$post('http://localhost:3333/emprestimo/verificar', categoria)
-        console.log(await this.$axios.$post('http://localhost:3333/emprestimo/verificar', categoria));
         this.emprestado = socorro[0].emprestado
+        if(this.emprestado == false){
+          this.titulo = socorro[0].titulo
+        }
         this.pesquisa = socorro
+        console.log(socorro[0]);
         let pessoa = await this.$axios.$post(`http://localhost:3333/usuario/${this.pesquisa[0].Emprestimo.id_usuario}`)
-        this.nomeUsuario = pessoa.data.nome
+        this.nomeUsuario = (pessoa.data.nome).toUpperCase()
         // console.log(socorro);
       } catch (error) {
-        this.$toast.error('Ocorreu um erro ao realizar o cadastro!');
+      
       }
     },
 
