@@ -7,7 +7,7 @@
         <v-btn
           color="blue"
           outlined
-          @click="getCategorias"
+          @click="getEmprestimos"
         >
           Pesquisar
           </v-btn>
@@ -33,7 +33,7 @@
       >
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="emprestimos"
         :items-per-page="10"
         class="elevation-1"
       >
@@ -98,42 +98,49 @@ export default {
         },
         { text: "", value: "actions" }
       ],
-      categorias: []
+      emprestimos: []
     }
   },
 
   methods: {
-    getCategorias: async function () {
-      this.categorias = await this.$axios.$get(`http://localhost:3333/emprestimo`)
+    getEmprestimos: async function () {
+      this.emprestimos = await this.$axios.$get(`http://localhost:3333/emprestimo`)
+      this.emprestimos.forEach(emprestimo => {
+        if(emprestimo.devolucao){
+          emprestimo.devolucao = "Devolvido"
+        }else{
+          emprestimo.devolucao = "Não Devolvido"
+        }
+      });
     },
      async deletar (autor) {
       try {
         if (confirm(`Deseja deletar o emprestimo id: ${autor.id} - ${autor.prazo}?`)) {
           let response = await this.$axios.$post('http://localhost:3333/emprestimo/deletar', { id: autor.id });
           this.$toast.success(response.message)
-          this.getCategorias();
+          this.getEmprestimos();
         }
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
-    async editar (categoria) {
+    async editar (emprestimoEdi) {
       this.$router.push({
         name: 'emprestimo-status',
-        params: { id: categoria.id }
+        params: { id: emprestimoEdi.id }
       });
     },
-    async terminarEmprestimo(categoria){
-      let id = categoria.id;
-      let categoriaAmem = {
+    async terminarEmprestimo(emprestimoTerminar){
+      let id = emprestimoTerminar.id;
+      let emprestimoTerminarJSON = {
         devolucao: new Date(Date.now()).toISOString().substring(0,10)
       }
       try {
         if(confirm(`Deseja Terminar o emprestimo de id: ${id} ?`)){
-          await this.$axios.$post(`http://localhost:3333/emprestimo/${id}`, categoriaAmem )
+          await this.$axios.$post(`http://localhost:3333/emprestimo/${id}`, emprestimoTerminarJSON )
           this.$router.push('/emprestimo')
           this.$toast.success('Cadastro atualizado com sucesso!');
-          this.getCategorias()
+          this.getEmprestimos()
         }
       } catch (error) {
         this.$toast.error(error.message)
@@ -143,7 +150,7 @@ export default {
 
   },
   beforeMount(){
-    this.getCategorias()
+    this.getEmprestimos()
   }
   
 

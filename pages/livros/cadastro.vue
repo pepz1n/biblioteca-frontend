@@ -7,7 +7,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.id"
+              v-model="livro.id"
               placeholder="codigo"
               label="codigo"
               disabled
@@ -18,7 +18,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.titulo"
+              v-model="livro.titulo"
               placeholder="Titulo"
               label="Titulo"
               :rules="rule"
@@ -30,7 +30,7 @@
         <v-row>
           <v-col>
             <v-textarea
-              v-model="categoria.sinopse"
+              v-model="livro.sinopse"
               placeholder="Sinopse"
               label="Sinopse"
               :rules="rule"
@@ -42,7 +42,7 @@
           <v-row>
           <v-col>
             <v-autocomplete
-            v-model="categoria.idCategoria"
+            v-model="livro.idCategoria"
             :items="categorias"
             outlined
             label="ID Categoria"
@@ -54,7 +54,7 @@
           </v-col>
           <v-col>
             <v-autocomplete
-            v-model="categoria.idAutor"
+            v-model="livro.idAutor"
             :items="autores"
             outlined
             label="ID Autor"
@@ -91,7 +91,7 @@ export default {
   data () {
     return {
       valid: false,
-      categoria: {
+      livro: {
         id: null,
         titulo: null,
         sinopse: null,
@@ -118,21 +118,21 @@ export default {
   methods: {
     async persistir () {
       try {
-         let categoria = {
-        titulo: this.categoria.titulo,
-        sinopse: this.categoria.sinopse,
-        emprestado: this.categoria.emprestado,
-        idCategoria: this.categoria.idCategoria,
-        idAutor: this.categoria.idAutor
+         let livro = {
+        titulo: this.livro.titulo,
+        sinopse: this.livro.sinopse,
+        emprestado: this.livro.emprestado,
+        idCategoria: this.livro.idCategoria,
+        idAutor: this.livro.idAutor
         };
 
-        if(!this.categoria.id){  
-          let response = await this.$axios.$post('http://localhost:3333/livro', categoria);
+        if(!this.livro.id){  
+          let response = await this.$axios.$post('http://localhost:3333/livro', livro);
           this.$router.push('/livros')
           return this.$toast.success(`${response.titulo} cadastrado com sucesso`)
         }
 
-        await this.$axios.$post(`http://localhost:3333/livro/${this.categoria.id}`, categoria )
+        await this.$axios.$post(`http://localhost:3333/livro/${this.livro.id}`, livro )
         this.$router.push('/livros')
         this.$toast.success('Cadastro atualizado com sucesso!');
       } catch (error) {
@@ -148,7 +148,7 @@ export default {
       this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
     },
     async getById (id) {
-      this.categoria = await this.$axios.$get(`http://localhost:3333/livro/${id}`);
+      this.livro= await this.$axios.$get(`http://localhost:3333/livro/${id}`);
     } 
   }
 }

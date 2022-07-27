@@ -7,7 +7,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.id"
+              v-model="usuario.id"
               placeholder="codigo"
               label="codigo"
               disabled
@@ -18,7 +18,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.nome"
+              v-model="usuario.nome"
               placeholder="Nome"
               label="Nome"
               :rules="rule"
@@ -30,7 +30,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.cpfcnpj"
+              v-model="usuario.cpfcnpj"
               placeholder="CPF/CNPJ"
               label="CPF/CNPJ"
               :rules="rule"
@@ -42,7 +42,7 @@
           <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.email"
+              v-model="usuario.email"
               placeholder="E-MAIL"
               label="E-MAIL"
               :rules="rule"
@@ -52,7 +52,7 @@
           </v-col>
           <v-col>
             <v-text-field
-              v-model="categoria.telefone"
+              v-model="usuario.telefone"
               placeholder="Telefone"
               label="Telefone"
               :rules="rule"
@@ -87,7 +87,7 @@ export default {
   data () {
     return {
       valid: false,
-      categoria: {
+      usuario: {
         nome: null,
         cpfcnpj: null,
         email: null,
@@ -110,19 +110,19 @@ export default {
         if (!this.valid) {
           return this.$toast.warning('O formulário de cadastro não é válido!')
         }
-        let categoria = {
-        nome: this.categoria.nome,
-        cpfcnpj: this.categoria.cpfcnpj,
-        email: this.categoria.email,
-        telefone: this.categoria.telefone
+        let usuario = {
+        nome: this.usuario.nome,
+        cpfcnpj: this.usuario.cpfcnpj,
+        email: this.usuario.email,
+        telefone: this.usuario.telefone
         };
         
-        if(!this.categoria.id){  
-          let response = await this.$axios.$post('http://localhost:3333/usuario', categoria);
+        if(!this.usuario.id){  
+          let response = await this.$axios.$post('http://localhost:3333/usuario', usuario);
           this.$router.push('/usuarios')
           return this.$toast.success(`${response.nome} cadastrado com sucesso`)
         }
-        await this.$axios.$post(`http://localhost:3333/usuario/${this.categoria.id}`, categoria )
+        await this.$axios.$post(`http://localhost:3333/usuario/${this.usuario.id}`, usuario )
         this.$router.push('/usuarios')
         this.$toast.success('Cadastro atualizado com sucesso!');
       } catch (error) {
@@ -130,7 +130,7 @@ export default {
       }
     },
     async getById (id) {
-      this.categoria = await this.$axios.$get(`http://localhost:3333/usuario/${id}`);
+      this.usuario = await this.$axios.$get(`http://localhost:3333/usuario/${id}`);
     }
   }
 }

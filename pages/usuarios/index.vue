@@ -7,7 +7,7 @@
         <v-btn
           color="blue"
           outlined
-          @click="getCategorias"
+          @click="getUsuario"
         >
           Pesquisar
           </v-btn>
@@ -33,7 +33,7 @@
       >
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="usuario"
         :items-per-page="10"
         class="elevation-1"
       >
@@ -98,34 +98,34 @@ export default {
         },
         { text: "", value: "actions" }
       ],
-      categorias: []
+      usuario: []
     }
   },
 
   methods: {
-    getCategorias: async function () {
-        this.categorias = await this.$axios.$get(`http://localhost:3333/usuario`)
+    getUsuario: async function () {
+        this.usuario = await this.$axios.$get(`http://localhost:3333/usuario`)
     },
-    async deletar (autor) {
+    async deletar (usuarioDelete) {
       try {
-        if (confirm(`Deseja deletar o usuario id ${autor.id} - ${autor.nome}?`)) {
-          let response = await this.$axios.$post('http://localhost:3333/usuario/deletar', { id: autor.id });
+        if (confirm(`Deseja deletar o usuario id ${usuarioDelete.id} - ${usuarioDelete.nome}?`)) {
+          let response = await this.$axios.$post('http://localhost:3333/usuario/deletar', { id: usuarioDelete.id });
           this.$toast.success(response.message)
-          this.getCategorias();
+          this.getUsuario();
         }
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
-    async editar (categoria) {
+    async editar (usuarioEditar) {
       this.$router.push({
         name: 'usuarios-cadastro',
-        params: { id: categoria.id }
+        params: { id: usuarioEditar.id }
       });
     }
   },
    beforeMount(){
-      this.getCategorias()
+      this.getUsuario()
     }
 }
 </script>

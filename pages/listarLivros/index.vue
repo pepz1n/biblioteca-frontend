@@ -7,7 +7,7 @@
         <v-row>
           <v-col>
             <v-autocomplete
-            v-model="categoria.id"
+            v-model="listarLivro.id"
             :items="livros"
             outlined
             label="ID Livro"
@@ -32,7 +32,7 @@
         max-width="344"
       >
         <v-card-text>
-          <div>ID: {{this.categoria.id}}</div>
+          <div>ID: {{this.listarLivro.id}}</div>
           <p class="text-h4 text--primary">
             {{this.pesquisa[0].Emprestimo.titulo}}
           </p>
@@ -88,10 +88,7 @@
         max-width="344"
       >
         <v-card-text>
-          <div>ID: {{this.categoria.id}}</div>
-          <p class="text-h4 text--primary">
-            {{this.categoria.titulo}}
-          </p>
+          <div>ID: {{this.listarLivro.id}}</div>
           <p class="text-h4 text--primary">
             {{this.titulo}}
           </p>
@@ -174,7 +171,7 @@ export default {
           value: 'message',
         },
       ],
-      categoria: {
+      listarLivro: {
         id: null
       },
       livros: []
@@ -191,11 +188,11 @@ export default {
 
     async verificar (){
       try {
-        let categoria ={
-          idLivro: this.categoria.id
+        let listarLivro ={
+          idLivro: this.listarLivro.id
         };
 
-        let socorro = await this.$axios.$post('http://localhost:3333/emprestimo/verificar', categoria)
+        let socorro = await this.$axios.$post('http://localhost:3333/emprestimo/verificar', listarLivro)
         this.emprestado = socorro[0].emprestado
         if(this.emprestado == false){
           this.titulo = socorro[0].titulo

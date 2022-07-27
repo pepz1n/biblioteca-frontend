@@ -7,7 +7,7 @@
         <v-btn
           color="blue"
           outlined
-          @click="getCategorias"
+          @click="getAutores"
         >
           Pesquisar
           </v-btn>
@@ -33,7 +33,7 @@
       >
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="autores"
         :items-per-page="10"
         class="elevation-1"
       >
@@ -86,13 +86,13 @@ export default {
         },
         { text: "", value: "actions" }
       ],
-      categorias: []
+      autores: []
     }
   },
 
   methods: {
-    getCategorias: async function () {
-      this.categorias = await this.$axios.$get(`http://localhost:3333/autor`)
+    getAutores: async function () {
+      this.autores = await this.$axios.$get(`http://localhost:3333/autor`)
     },
     
     async deletar (autor) {
@@ -100,21 +100,21 @@ export default {
         if (confirm(`Deseja deletar o autor id ${autor.id} - ${autor.nome}?`)) {
           let response = await this.$axios.$post('http://localhost:3333/autor/deletar', { id: autor.id });
           this.$toast.success(response.message)
-          this.getCategorias();
+          this.getAutores();
         } 
       } catch (error) {
         this.$toast.error(error.message)
       }
     },
-    async editar (categoria) {
+    async editar (autor) {
       this.$router.push({
         name: 'autores-cadastro',
-        params: { id: categoria.id }
+        params: { id: autor.id }
       });
     }
   },
   created(){
-    this.getCategorias()
+    this.getAutores()
   }
 
 }

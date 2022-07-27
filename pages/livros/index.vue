@@ -7,7 +7,7 @@
         <v-btn
           color="blue"
           outlined
-          @click="getCategorias"
+          @click="getLivros"
         >
           Pesquisar
           </v-btn>
@@ -33,7 +33,7 @@
       >
       <v-data-table
         :headers="headers"
-        :items="categorias"
+        :items="livros"
         :items-per-page="10"
         class="elevation-1"
       >
@@ -98,35 +98,35 @@ export default {
         },
         { text: "", value: "actions" }
       ],
-      categorias: []
+      livros: []
     }
   },
 
   methods: {
-     getCategorias: async function () {
+     getLivros: async function () {
       console.log(await this.$axios.$get(`http://localhost:3333/livro`));
-      this.categorias = await this.$axios.$get(`http://localhost:3333/livro`)
+      this.livros = await this.$axios.$get(`http://localhost:3333/livro`)
     },
-    async deletar (autor) {
+    async deletar (livroDeletar) {
       try {
-        if (confirm(`Deseja deletar o livro id ${autor.id} - ${autor.nome}?`)) {
-          let response = await this.$axios.$post('http://localhost:3333/livro/deletar', { id: autor.id });
+        if (confirm(`Deseja deletar o livro id: ${livroDeletar.id}| Com o título de : ${livroDeletar.titulo}?`)) {
+          let response = await this.$axios.$post('http://localhost:3333/livro/deletar', { id: livroDeletar.id });
           this.$toast.success(response.message)
-          this.getCategorias();
+          this.getLivros();
         }
       } catch (error) {
         this.$toast.error(error.message)
       }  
     },
-    async editar (categoria) {
+    async editar (livroEditar) {
       this.$router.push({
         name: 'livros-cadastro',
-        params: { id: categoria.id }
+        params: { id: livroEditar.id }
       });
     }
   },
   beforeMount(){
-    this.getCategorias()
+    this.getLivros()
   }
 
 }

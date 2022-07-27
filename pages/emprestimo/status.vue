@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <h1 style="text-align: center">Cadastro de Categorias</h1>
+    <h1 style="text-align: center">Status de emprestimo</h1>
     <hr>
     <v-form v-model="valid">
       <v-container>
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.id"
+              v-model="emprestimo.id"
               placeholder="codigo"
               label="codigo"
               disabled
@@ -16,8 +16,7 @@
           </v-col>
           <v-col>
             <v-text-field
-              v-model="nulo"
-              placeholder="Devolução"
+              v-model="emprestimo.devolucao"
               label="Devolução"
               :rules="rule"
               disabled
@@ -41,7 +40,7 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="categoria.prazo"
+                      v-model="emprestimo.prazo"
                       label="Prazo"
                       readonly
                       v-bind="attrs"
@@ -64,8 +63,8 @@
           <v-col>
             <v-autocomplete
               chips
-              v-model="categoria.livros"
-              :items="categoria.livros"
+              v-model="emprestimo.livros"
+              :items="livros"
               clearable
               deletable-chips
               multiple
@@ -80,7 +79,7 @@
         <v-row>
           <v-col>
             <v-autocomplete
-            v-model="categoria.idUsuario"
+            v-model="emprestimo.idUsuario"
             :items="usuarios"
             outlined
             label="ID Usuarios"
@@ -107,7 +106,7 @@
       to="/emprestimo"
       color="red"
     >
-      cancelar
+      Voltar
     </v-btn>
   </v-container>
 </template>
@@ -122,17 +121,19 @@ export default {
       nulo: "null",
       activePicker: null,
       menu: false,
-      categoria: {
+      emprestimo: {
         id: null,
+        devolucao: null,
         idUsuario: null,
         nome: null,
         prazo: null,
         livros: []
       },
-      categorias: {
+      emprestimos: {
         id: null
       },
       usuarios: [],
+      livros: [],
       rule: [
         v => !!v || 'Esse campo é obrigatório'
       ]
@@ -158,22 +159,12 @@ export default {
           return this.$toast.warning('O formulário de cadastro não é válido!')
         }
 
-        let categoria = {
+        let emprestimo = {
           prazo: this.prazo,
-          devolucao: null,
-          idUsuario: this.categoria.idUsuario,
-          livros: this.categorias.id
+          devolucao: this.emprestimo.devolucao,
+          idUsuario: this.emprestimo.idUsuario,
+          livros: this.emprestimos.id
         };
-        if(!this.categoria.id){
-          let response = await this.$axios.$post('http://localhost:3333/emprestimo', categoria);
-          this.$router.push('/emprestimo')
-          return this.$toast.success(`${response.id} cadastrado com sucesso`)
-        }
-
-
-        await this.$axios.$post(`http://localhost:3333/emprestimo/${this.categoria.id}`, categoria )
-        this.$router.push('/emprestimo')
-        this.$toast.success('Cadastro atualizado com sucesso!');
       } catch (error) {
         this.$toast.error('Ocorreu um erro ao realizar o cadastro!');
         
@@ -185,7 +176,10 @@ export default {
     },
    
     async getById (id) {
-      this.categoria = await this.$axios.$get(`http://localhost:3333/emprestimo/${id}`);
+      this.emprestimo = await this.$axios.$get(`http://localhost:3333/emprestimo/${id}`);
+      if(!this.emprestimo.devolucao){
+        this.emprestimo.devolucao = "Não Devolvido"
+      }
       console.log(await this.$axios.$get(`http://localhost:3333/emprestimo/${id}`));
     },
     

@@ -88,10 +88,10 @@ export default {
     getCategorias: async function () {
       this.categorias = await this.$axios.$get(`http://localhost:3333/categorias`)
     },
-     async deletar (autor) {
+     async deletar (categoria) {
       try {
-        if (confirm(`Deseja deletar a categoria id ${autor.id} - ${autor.nome}?`)) {
-          let response = await this.$axios.$post('http://localhost:3333/categorias/deletar', { id: autor.id });
+        if (confirm(`Deseja deletar a categoria id ${categoria.id} - ${categoria.nome}?`)) {
+          let response = await this.$axios.$post('http://localhost:3333/categorias/deletar', { id: categoria.id });
           this.$toast.success(response.message)
           this.getCategorias();
         }

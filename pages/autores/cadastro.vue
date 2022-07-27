@@ -7,7 +7,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.id"
+              v-model="autor.id"
               placeholder="codigo"
               label="codigo"
               disabled
@@ -18,7 +18,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.nome"
+              v-model="autor.nome"
               placeholder="Nome"
               label="Nome"
               :rules="rule"
@@ -30,7 +30,7 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model="categoria.email"
+              v-model="autor.email"
               placeholder="Email"
               label="Email"
               :rules="rule"
@@ -65,7 +65,7 @@ export default {
   data () {
     return {
       valid: false,
-      categoria: {
+      autor: {
         id: null,
         nome: null,
         email:null
@@ -87,18 +87,18 @@ export default {
          if (!this.valid) {
           return this.$toast.warning('O formulário de cadastro não é válido!')
         }
-        let categoria = {
-          nome: this.categoria.nome,
-          email: this.categoria.email,
+        let autor = {
+          nome: this.autor.nome,
+          email: this.autor.email,
         };
         
-        if(!this.categoria.id){
-          let response = await this.$axios.$post('http://localhost:3333/autor', categoria);
+        if(!this.autor.id){
+          let response = await this.$axios.$post('http://localhost:3333/autor', autor);
           this.$router.push('/autores')
           return this.$toast.success(`${response.nome} cadastrado com sucesso`)
         }
 
-        await this.$axios.$post(`http://localhost:3333/autor/${this.categoria.id}`, categoria )
+        await this.$axios.$post(`http://localhost:3333/autor/${this.autor.id}`, autor )
         this.$router.push('/autores')
         this.$toast.success('Cadastro atualizado com sucesso!');
       } catch (error) {
@@ -107,7 +107,7 @@ export default {
       }
     },
     async getById (id) {
-      this.categoria = await this.$axios.$get(`http://localhost:3333/autor/${id}`);
+      this.autor = await this.$axios.$get(`http://localhost:3333/autor/${id}`);
     }
   }
 }
