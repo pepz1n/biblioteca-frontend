@@ -159,12 +159,14 @@ export default {
     },
   },
   created () {
-    this.getLivros()
     this.getUsuarios();
     if (this.$route?.params?.id) {
       this.getById(this.$route.params.id)
+      this.getLivros()
       this.disabilitar = true
+      return
     }
+    this.getLivrosDisponiveis()
   },
 
   methods: {
@@ -206,6 +208,13 @@ export default {
     
     async getLivros () {
       let livro = await this.$axios.$get('http://localhost:3333/livro');
+       livro.forEach(element => {
+        this.livros.push(element)
+       }); 
+    },
+    async getLivrosDisponiveis () {
+      let livro = await this.$axios.$get('http://localhost:3333/livros-disponiveis');
+      console.log(livro);
        livro.forEach(element => {
         this.livros.push(element)
        }); 
