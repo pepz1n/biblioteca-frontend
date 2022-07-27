@@ -16,7 +16,7 @@
           </v-col>
           <v-col>
             <v-text-field
-              v-model="nulo"
+              v-model="emprestimo.devolucao"
               placeholder="Devolução"
               label="Devolução"
               :rules="rule"
@@ -46,6 +46,7 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :disabled = "disabilitar"
                       outlined
                     ></v-text-field>
                   </template>
@@ -56,6 +57,7 @@
                     :min="new Date(Date.now()).toISOString().substr(0, 10)"
                     @change="save"
                     rules="rule"
+                    :disabled = "disabilitar"
                   ></v-date-picker>
                 </v-menu>
               </div>
@@ -73,6 +75,7 @@
               label="ID Livro"
               item-text="titulo"
               item-value="id"
+              :disabled = "disabilitar"
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -87,6 +90,7 @@
             required
             item-text="nome"
             item-value="id"
+            :disabled = "disabilitar"
           ></v-autocomplete>
           </v-col>
         </v-row>
@@ -97,6 +101,7 @@
       outlined
       @click="persistir"
       color="green"
+      v-if="disabilitar == null"
     >
       cadastrar
     </v-btn>
@@ -104,8 +109,17 @@
       outlined
       to="/emprestimo"
       color="red"
+      v-if="disabilitar == null"
     >
       cancelar
+    </v-btn>
+    <v-btn
+      outlined
+      to="/emprestimo"
+      color="red"
+      v-if="disabilitar"
+    >
+      voltar
     </v-btn>
   </v-container>
 </template>
@@ -116,16 +130,18 @@ export default {
 
   data () {
     return {
-      valid: false,
+      disabilitar: null,
       nulo: "null",
       activePicker: null,
       menu: false,
+      message: null,
       emprestimo: {
         id: null,
         idUsuario: null,
         nome: null,
         prazo: null,
-        livros: []
+        livros: [],
+        devolucao: null
       },
       emprestimos: {
         id: null
@@ -147,16 +163,14 @@ export default {
     this.getUsuarios();
     if (this.$route?.params?.id) {
       this.getById(this.$route.params.id)
+      this.disabilitar = true
     }
   },
 
   methods: {
     async persistir() {
+      let response = null
       try {
-         if (!this.valid) {
-          return this.$toast.warning('O formulário de cadastro não é válido!')
-        }
-
         let emprestimo = {
           prazo: this.emprestimo.prazo,
           devolucao: null,
@@ -164,13 +178,17 @@ export default {
           livros: this.emprestimo.livros
         };
         if(!this.emprestimo.id){
-          let response = await this.$axios.$post('http://localhost:3333/emprestimo', emprestimo);
-          this.$router.push('/emprestimo')
-          return this.$toast.success(`${response.id} cadastrado com sucesso`)
+          response = await this.$axios.$post('http://localhost:3333/emprestimo', emprestimo);
+          console.log(response);
+          if(response.type == 'sucess'){
+            this.$router.push('/emprestimo')
+            return this.$toast.success(`${response.dados.id} cadastrado com sucesso`)
+          }else{
+            return this.$toast.error(`${response.message}`)
+          }
         }
       } catch (error) {
-        this.$toast.error('Ocorreu um erro ao realizar o cadastro!');
-        
+        return error
       }
 
     },
@@ -180,6 +198,9 @@ export default {
    
     async getById (id) {
       this.emprestimo = await this.$axios.$get(`http://localhost:3333/emprestimo/${id}`);
+      if(!this.emprestimo.devolucao){
+        this.emprestimo.devolucao = "Não Devolvido"
+      }
       console.log(await this.$axios.$get(`http://localhost:3333/emprestimo/${id}`));
     },
     

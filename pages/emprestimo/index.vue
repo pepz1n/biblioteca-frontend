@@ -37,6 +37,11 @@
         :items-per-page="10"
         class="elevation-1"
       >
+        <template v-slot:item.devolucao="{ item }">
+          <p 
+            :style="item.devolucao === 'Devolvido' ? 'color: green' : 'color: red'"
+          > {{ item.devolucao }} </p>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
             small
@@ -126,7 +131,7 @@ export default {
     },
     async editar (emprestimoEdi) {
       this.$router.push({
-        name: 'emprestimo-status',
+        name: 'emprestimo-cadastro',
         params: { id: emprestimoEdi.id }
       });
     },
@@ -139,7 +144,7 @@ export default {
         if(confirm(`Deseja Terminar o emprestimo de id: ${id} ?`)){
           await this.$axios.$post(`http://localhost:3333/emprestimo/${id}`, emprestimoTerminarJSON )
           this.$router.push('/emprestimo')
-          this.$toast.success('Cadastro atualizado com sucesso!');
+          this.$toast.success(`Emprestimo finalizado com a data de ${new Date(Date.now()).toISOString().substring(0,10)}`);
           this.getEmprestimos()
         }
       } catch (error) {

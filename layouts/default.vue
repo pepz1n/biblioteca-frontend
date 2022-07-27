@@ -118,17 +118,17 @@ export default {
           to: '/autores'
         },
         {
-          icon: 'mdi-cat',
+          icon: 'mdi-account-box',
           title: 'Usuarios',
           to: '/usuarios'
         },
         {
-          icon: 'mdi-cannabis',
+          icon: 'mdi-book-alert-outline',
           title: 'Consultar Livro',
           to: '/listarLivros'
         },
         {
-          icon: 'mdi-cannabis',
+          icon: 'mdi-book-open-blank-variant',
           title: 'Emprestimo',
           to: '/emprestimo'
         },
