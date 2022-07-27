@@ -44,6 +44,8 @@
                       label="Prazo"
                       prepend-icon="mdi-calendar"
                       readonly
+                      :rules="rule"
+                      required
                       v-bind="attrs"
                       v-on="on"
                       :disabled = "disabilitar"
@@ -69,6 +71,8 @@
               v-model="emprestimo.livros"
               :items="livros"
               clearable
+              :rules="rule"
+              required
               deletable-chips
               multiple
               outlined
@@ -131,6 +135,7 @@ export default {
   data () {
     return {
       disabilitar: null,
+      valid: false,
       nulo: "null",
       activePicker: null,
       menu: false,
@@ -171,6 +176,9 @@ export default {
 
   methods: {
     async persistir() {
+      if (!this.valid) {
+          return this.$toast.warning('O formulário de cadastro não é válido!')
+        }
       let response = null
       try {
         let emprestimo = {
